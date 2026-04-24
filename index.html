@@ -4,172 +4,131 @@
     <meta charset="UTF-8">
     <title>MERCENARY NETWORK | DATABASE</title>
     <style>
-        /* ОСНОВНОЙ СТИЛЬ С АНИМИРОВАННЫМ ФОНОМ */
+        /* ОСНОВНОЙ СТИЛЬ */
         body { 
             background-color: #0b0e14;
-            /* Три слоя фона: сетка, еще сетка и логотип */
+            margin: 0;
+            height: 100vh;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #78d1ff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ОТДЕЛЬНЫЙ СЛОЙ ДЛЯ ФОНОВОГО ЛОГОТИПА (чтобы точно работал) */
+        .background-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Сетка и Логотип */
             background-image: 
                 linear-gradient(rgba(44, 100, 204, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(44, 100, 204, 0.05) 1px, transparent 1px),
                 url('https://nocookie.net');
-            background-size: 30px 30px, 30px 30px, 70vh;
-            background-repeat: repeat, repeat, no-repeat;
             background-position: center;
-            background-attachment: fixed;
-            background-blend-mode: lighten; /* Чтобы логотип был тусклым и не мешал тексту */
-            
-            color: #78d1ff;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0;
-            overflow: hidden;
-            
-            /* Запуск анимации "дыхания" фона */
-            animation: backgroundPulse 10s ease-in-out infinite;
+            background-repeat: repeat, repeat, no-repeat;
+            background-size: 30px 30px, 30px 30px, 60vh;
+            opacity: 0.2; /* Управляет прозрачностью фона здесь */
+            z-index: 1;
+            animation: pulse 8s ease-in-out infinite;
         }
 
-        /* Анимация пульсации логотипа на фоне */
-        @keyframes backgroundPulse {
-            0% { background-size: 30px 30px, 30px 30px, 65vh; filter: brightness(1); }
-            50% { background-size: 30px 30px, 30px 30px, 70vh; filter: brightness(1.3); }
-            100% { background-size: 30px 30px, 30px 30px, 65vh; filter: brightness(1); }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.05); opacity: 0.25; }
+            100% { transform: scale(1); opacity: 0.15; }
         }
 
-        /* ЭФФЕКТ СКАНИРОВАНИЯ (ЛИНИИ) */
+        /* ЛИНИИ ЭКРАНА */
         body::after {
-            content: " ";
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
             background-size: 100% 4px;
             z-index: 10;
             pointer-events: none;
         }
 
-        /* КОНТЕЙНЕРЫ (ОКНА) */
+        /* ОКНА ИНТЕРФЕЙСА */
         #login-form, #database-content { 
-            border: 1px solid #2c64cc;
-            border-top: 4px solid #2c64cc;
-            background: rgba(10, 15, 20, 0.9); /* Прозрачность, чтобы видеть фон */
-            padding: 40px; 
-            box-shadow: 0 0 30px rgba(0,0,0,1), inset 0 0 20px rgba(44, 100, 204, 0.1);
-            max-width: 600px;
-            width: 90%;
             position: relative;
             z-index: 20;
-            backdrop-filter: blur(5px); /* Размытие фона за окном */
+            background: rgba(10, 15, 25, 0.9);
+            border: 1px solid #2c64cc;
+            border-top: 4px solid #2c64cc;
+            padding: 40px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
         }
 
         .hidden { display: none !important; }
 
-        /* МАЛЕНЬКИЙ ЛОГОТИП ВНУТРИ ФОРМЫ */
-        .mrc-logo {
-            width: 100px;
-            height: 100px;
+        .mrc-logo-small {
+            width: 80px;
+            height: 80px;
             margin: 0 auto 20px;
-            background-image: url('https://nocookie.net');
+            background: url('https://nocookie.net') no-repeat center;
             background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            filter: drop-shadow(0 0 10px rgba(44, 100, 204, 0.6));
         }
 
-        h2 { 
-            text-align: center;
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-            color: #ffffff;
-            margin-bottom: 25px;
-            text-shadow: 0 0 10px #2c64cc;
-        }
+        h2 { text-align: center; letter-spacing: 3px; color: #fff; text-transform: uppercase; }
 
-        /* ПОЛЯ ВВОДА */
         input { 
-            background: rgba(22, 27, 34, 0.8); 
-            border: 1px solid #2c64cc; 
-            color: #fff; 
-            padding: 15px; 
-            margin: 10px 0; 
-            width: 100%; 
-            box-sizing: border-box;
-            outline: none;
+            background: #161b22; border: 1px solid #2c64cc; color: #fff; 
+            padding: 15px; margin: 10px 0; width: 100%; box-sizing: border-box; 
         }
 
-        /* КНОПКА */
         button { 
-            background: #2c64cc; 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            width: 100%; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 10px;
+            background: #2c64cc; color: #fff; border: none; padding: 15px; 
+            width: 100%; cursor: pointer; font-weight: bold; text-transform: uppercase;
             transition: 0.3s;
         }
 
-        button:hover { 
-            background: #3d7eeb;
-            box-shadow: 0 0 15px rgba(44, 100, 204, 0.5);
-        }
+        button:hover { background: #3d7eeb; box-shadow: 0 0 15px #2c64cc; }
 
-        /* КАРТОЧКИ ПЕРСОНАЖЕЙ */
         .card { 
-            border-left: 3px solid #2c64cc;
-            background: rgba(44, 100, 204, 0.1);
-            padding: 15px; 
-            margin-top: 15px;
+            border-left: 3px solid #2c64cc; background: rgba(44, 100, 204, 0.1);
+            padding: 15px; margin-top: 15px; 
         }
 
-        .card h3 { margin: 0; color: #fff; text-transform: uppercase; }
-
-        #output {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        /* КРАСИВЫЙ СКРОЛЛ */
-        #output::-webkit-scrollbar { width: 4px; }
-        #output::-webkit-scrollbar-thumb { background: #2c64cc; }
-
+        #output { max-height: 350px; overflow-y: auto; }
     </style>
 </head>
 <body>
 
-    <!-- ОКНО ВХОДА -->
+    <!-- Фоновый слой -->
+    <div class="background-overlay"></div>
+
+    <!-- Форма входа -->
     <div id="login-form">
-        <div class="mrc-logo"></div>
-        <h2>MERCENARY LOGIN</h2>
+        <div class="mrc-logo-small"></div>
+        <h2>MERCENARY NET</h2>
         <input type="text" id="username" placeholder="OPERATIVE ID">
         <input type="password" id="password" placeholder="ACCESS CODE">
-        <button onclick="login()">ENTER NETWORK</button>
-        <p id="error" style="color: #ff4444; display: none; text-align: center; margin-top: 15px;">UNAUTHORIZED ACCESS</p>
+        <button onclick="login()">CONNECT</button>
+        <p id="error" style="color:red; display:none; text-align:center;">ACCESS DENIED</p>
     </div>
 
-    <!-- БАЗА ДАННЫХ -->
+    <!-- Контент -->
     <div id="database-content" class="hidden">
         <h2>CENTRAL DATABASE</h2>
         <div id="output"></div>
         <br>
-        <button onclick="location.reload()" style="background: transparent; border: 1px solid #2c64cc; font-size: 10px;">DISCONNECT</button>
+        <button onclick="location.reload()">DISCONNECT</button>
     </div>
 
     <script>
-        const USERS = {
-            "admin": "pda2024",
-            "merc": "sindikat"
-        };
+        const USERS = { "admin": "pda2024" };
 
         function login() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-
-            if (USERS[user] && USERS[user] === pass) {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if (USERS[u] && USERS[u] === p) {
                 document.getElementById('login-form').classList.add('hidden');
                 document.getElementById('database-content').classList.remove('hidden');
                 loadData();
@@ -180,23 +139,18 @@
 
         function loadData() {
             fetch('database.json')
-                .then(response => response.json())
+                .then(r => r.json())
                 .then(data => {
                     let html = '';
                     data.forEach(item => {
-                        html += `
-                            <div class="card">
-                                <h3>${item.name}</h3>
-                                <p><b>FACTION:</b> ${item.faction}</p>
-                                <p><b>STATUS:</b> ${item.status}</p>
-                                <p><b>NOTES:</b> ${item.description}</p>
-                            </div>
-                        `;
+                        html += `<div class="card">
+                            <h3>${item.name}</h3>
+                            <p><b>ФРАКЦИЯ:</b> ${item.faction}</p>
+                            <p><b>СТАТУС:</b> ${item.status}</p>
+                            <p>${item.description}</p>
+                        </div>`;
                     });
                     document.getElementById('output').innerHTML = html;
-                })
-                .catch(err => {
-                    document.getElementById('output').innerHTML = "ERROR: DATABASE NOT FOUND.";
                 });
         }
     </script>
