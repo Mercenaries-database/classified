@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>MERCENARY NETWORK | DATABASE</title>
+    <title>MERCENARY NETWORK</title>
     <style>
-        /* ОСНОВНОЙ СТИЛЬ */
         body { 
             background-color: #0b0e14;
             margin: 0;
@@ -12,119 +11,93 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             color: #78d1ff;
             overflow: hidden;
-            position: relative;
         }
 
-        /* ОТДЕЛЬНЫЙ СЛОЙ ДЛЯ ФОНОВОГО ЛОГОТИПА (чтобы точно работал) */
-        .background-overlay {
+        /* ГАРАНТИРОВАННЫЙ ФОН */
+        .bg-layer {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* Сетка и Логотип */
-            background-image: 
-                linear-gradient(rgba(44, 100, 204, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(44, 100, 204, 0.05) 1px, transparent 1px),
-                url('https://nocookie.net');
-            background-position: center;
-            background-repeat: repeat, repeat, no-repeat;
-            background-size: 30px 30px, 30px 30px, 60vh;
-            opacity: 0.2; /* Управляет прозрачностью фона здесь */
             z-index: 1;
-            animation: pulse 8s ease-in-out infinite;
+            /* Сетка */
+            background-image: 
+                linear-gradient(rgba(44, 100, 204, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(44, 100, 204, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ЛОГОТИП НА ФОНЕ */
+        .bg-logo {
+            width: 80vh;
+            height: 80vh;
+            /* Используем альтернативную ссылку на логотип */
+            background: url('https://wikimedia.org') no-repeat center;
+            background-size: contain;
+            opacity: 0.15; /* Если не видно, поставь 0.5 */
+            filter: blue;
+            animation: pulse 5s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.15; }
-            50% { transform: scale(1.05); opacity: 0.25; }
-            100% { transform: scale(1); opacity: 0.15; }
+            0% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.1; }
         }
 
-        /* ЛИНИИ ЭКРАНА */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* ОКНА ИНТЕРФЕЙСА */
         #login-form, #database-content { 
             position: relative;
-            z-index: 20;
-            background: rgba(10, 15, 25, 0.9);
+            z-index: 10;
+            background: rgba(10, 15, 25, 0.95);
             border: 1px solid #2c64cc;
             border-top: 4px solid #2c64cc;
             padding: 40px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            width: 90%;
-            max-width: 500px;
+            box-shadow: 0 0 50px #000;
+            width: 350px;
             backdrop-filter: blur(10px);
         }
 
         .hidden { display: none !important; }
 
-        .mrc-logo-small {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: url('https://nocookie.net') no-repeat center;
-            background-size: contain;
-        }
-
-        h2 { text-align: center; letter-spacing: 3px; color: #fff; text-transform: uppercase; }
-
         input { 
-            background: #161b22; border: 1px solid #2c64cc; color: #fff; 
-            padding: 15px; margin: 10px 0; width: 100%; box-sizing: border-box; 
+            background: #000; border: 1px solid #2c64cc; color: #fff; 
+            padding: 12px; margin: 10px 0; width: 100%; box-sizing: border-box; 
         }
 
         button { 
-            background: #2c64cc; color: #fff; border: none; padding: 15px; 
-            width: 100%; cursor: pointer; font-weight: bold; text-transform: uppercase;
-            transition: 0.3s;
+            background: #2c64cc; color: #fff; border: none; padding: 12px; 
+            width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px;
         }
 
-        button:hover { background: #3d7eeb; box-shadow: 0 0 15px #2c64cc; }
-
-        .card { 
-            border-left: 3px solid #2c64cc; background: rgba(44, 100, 204, 0.1);
-            padding: 15px; margin-top: 15px; 
-        }
-
-        #output { max-height: 350px; overflow-y: auto; }
+        .card { border-left: 3px solid #2c64cc; background: rgba(44, 100, 204, 0.1); padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <!-- Фоновый слой -->
-    <div class="background-overlay"></div>
-
-    <!-- Форма входа -->
-    <div id="login-form">
-        <div class="mrc-logo-small"></div>
-        <h2>MERCENARY NET</h2>
-        <input type="text" id="username" placeholder="OPERATIVE ID">
-        <input type="password" id="password" placeholder="ACCESS CODE">
-        <button onclick="login()">CONNECT</button>
-        <p id="error" style="color:red; display:none; text-align:center;">ACCESS DENIED</p>
+    <div class="bg-layer">
+        <div class="bg-logo"></div>
     </div>
 
-    <!-- Контент -->
+    <div id="login-form">
+        <h2 style="text-align:center">MERC NETWORK</h2>
+        <input type="text" id="username" placeholder="ID">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <button onclick="login()">LOGIN</button>
+        <p id="error" style="color:red; display:none; text-align:center;">ERROR</p>
+    </div>
+
     <div id="database-content" class="hidden">
-        <h2>CENTRAL DATABASE</h2>
+        <h2>DATABASE</h2>
         <div id="output"></div>
-        <br>
-        <button onclick="location.reload()">DISCONNECT</button>
+        <button onclick="location.reload()" style="margin-top:20px">EXIT</button>
     </div>
 
     <script>
         const USERS = { "admin": "pda2024" };
-
         function login() {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
@@ -132,26 +105,16 @@
                 document.getElementById('login-form').classList.add('hidden');
                 document.getElementById('database-content').classList.remove('hidden');
                 loadData();
-            } else {
-                document.getElementById('error').style.display = 'block';
-            }
+            } else { document.getElementById('error').style.display = 'block'; }
         }
-
         function loadData() {
-            fetch('database.json')
-                .then(r => r.json())
-                .then(data => {
-                    let html = '';
-                    data.forEach(item => {
-                        html += `<div class="card">
-                            <h3>${item.name}</h3>
-                            <p><b>ФРАКЦИЯ:</b> ${item.faction}</p>
-                            <p><b>СТАТУС:</b> ${item.status}</p>
-                            <p>${item.description}</p>
-                        </div>`;
-                    });
-                    document.getElementById('output').innerHTML = html;
+            fetch('database.json').then(r => r.json()).then(data => {
+                let html = '';
+                data.forEach(item => {
+                    html += `<div class="card"><h3>${item.name}</h3><p>${item.faction}</p></div>`;
                 });
+                document.getElementById('output').innerHTML = html;
+            });
         }
     </script>
 </body>
