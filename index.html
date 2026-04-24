@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>База Данных ЧЗО</title>
+    <style>
+        body { background: #1a1a1a; color: #00ff00; font-family: monospace; padding: 20px; }
+        .card { border: 1px solid #00ff00; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        h1 { border-bottom: 2px solid #00ff00; }
+    </style>
+</head>
+<body>
+    <h1>РЕЕСТР ПЕРСОНАЖЕЙ ЧЗО</h1>
+    <div id="output">Загрузка данных из сети...</div>
+
+    <script>
+        // Код, который берет файл database.json и вставляет его в HTML
+        fetch('database.json')
+            .then(response => response.json())
+            .then(data => {
+                let html = '';
+                data.forEach(item => {
+                    html += `
+                        <div class="card">
+                            <h3>${item.name} [${item.faction}]</h3>
+                            <p><b>Статус:</b> ${item.status}</p>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                });
+                document.getElementById('output').innerHTML = html;
+            });
+    </script>
+</body>
+</html>
