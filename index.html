@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>База Данных ЧЗО</title>
+    <title>Терминал ОСОЗНАНИЕ</title>
     <style>
-        body { background: #1a1a1a; color: #00ff00; font-family: monospace; padding: 20px; }
-        .card { border: 1px solid #00ff00; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
-        h1 { border-bottom: 2px solid #00ff00; }
+        body { background: #0a0a0a; color: #00ff00; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #login-form, #database-content { border: 2px solid #00ff00; padding: 30px; box-shadow: 0 0 15px #00ff00; background: #000; }
+        .hidden { display: none; }
+        input { background: #000; border: 1px solid #00ff00; color: #00ff00; padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; }
+        button { background: #00ff00; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background: #008800; }
+        .card { border-bottom: 1px solid #004400; padding: 10px 0; }
     </style>
 </head>
 <body>
-    <h1>РЕЕСТР ПЕРСОНАЖЕЙ ЧЗО</h1>
-    <div id="output">Загрузка данных из сети...</div>
+
+    <!-- ОКНО ВХОДА -->
+    <div id="login-form">
+        <h2 style="text-align: center;">ВВЕДИТЕ УЧЕТНЫЕ ДАННЫЕ</h2>
+        <input type="text" id="username" placeholder="ЛОГИН">
+        <input type="password" id="password" placeholder="ПАРОЛЬ">
+        <button onclick="login()">АВТОРИЗАЦИЯ</button>
+        <p id="error" style="color: red; display: none;">ДОСТУП ЗАПРЕЩЕН</p>
+    </div>
+
+    <!-- ОКНО С БАЗОЙ (скрыто по умолчанию) -->
+    <div id="database-content" class="hidden">
+        <h1>РЕЕСТР ПЕРСОНАЖЕЙ ЧЗО</h1>
+        <div id="output"></div>
+        <br>
+        <button onclick="location.reload()">ВЫХОД</button>
+    </div>
 
     <script>
-        // Код, который берет файл database.json и вставляет его в HTML
-        fetch('database.json')
-            .then(response => response.json())
-            .then(data => {
-                let html = '';
-                data.forEach(item => {
-                    html += `
-                        <div class="card">
-                            <h3>${item.name} [${item.faction}]</h3>
-                            <p><b>Статус:</b> ${item.status}</p>
-                            <p>${item.description}</p>
-                        </div>
-                    `;
+        // Твои логины и пароли (для RP этого достаточно)
+        const USERS = {
+            "admin": "pda2024",
+            "sidorovich": "habar"
+        };
+
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if (USERS[user] && USERS[user] === pass) {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('database-content').classList.remove('hidden');
+                loadData();
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        function loadData() {
+            fetch('database.json')
+                .then(response => response.json())
+                .then(data => {
+                    let html = '';
+                    data.forEach(item => {
+                        html += `
+                            <div class="card">
+                                <h3>${item.name} [${item.faction}]</h3>
+                                <p><b>Статус:</b> ${item.status}</p>
+                                <p>${item.description}</p>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('output').innerHTML = html;
                 });
-                document.getElementById('output').innerHTML = html;
-            });
+        }
     </script>
 </body>
 </html>
